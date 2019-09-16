@@ -1,24 +1,32 @@
-import React, { Component } from "react";
+import React from "react";
 import User from "../User/User";
+import Loader from "../Loader/Loader";
+import PropTypes from "prop-types";
 
-export default class Users extends Component {
-  
-  userStyle ={
+
+const Users = props => {
+  const userStyle = {
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
     gridGap: "20px"
-  }
+  };
 
-
-  render() {
+  if (props.loading) {
+    return <Loader />;
+  } else {
     return (
-      <div style={this.userStyle}>
-        {this.props.users.map(user => {
+      <div style={userStyle}>
+        {props.users.map(user => {
           return <User key={user.id} user={user} />;
         })}
       </div>
     );
   }
+};
 
-   
+Users.propTypes = {
+  users: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired
 }
+
+export default Users;

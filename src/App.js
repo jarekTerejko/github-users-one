@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Navbar from "./Components/Navbar/Navbar";
 import Users from "./Components/Users/Users";
+import Loader from "./Components/Loader/Loader";
 
 export default class App extends Component {
   state = {
@@ -10,8 +11,7 @@ export default class App extends Component {
 
   getUsers = async () => {
     this.setState({ loading: true });
-
-    const response = await fetch("https://api.github.com/users");
+    const response = await fetch(`https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
     const data = await response.json();
     console.log(data);
 
@@ -27,6 +27,8 @@ export default class App extends Component {
 
     // this.setState({ loading: false, users: data });
 
+
+    // console.log(process.env.REACT_APP_GITHUB_CLIENT_ID)
     this.getUsers()
   }
 
@@ -34,6 +36,7 @@ export default class App extends Component {
     return (
       <div>
         <Navbar />
+        {/* <Loader /> */}
         <div className="container">
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
