@@ -20,7 +20,7 @@ export default class SearchForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
     if (this.state.search === "") {
-        this.props.showAlert("Please enter text to search", "red")
+      this.props.showAlert("Please enter text to search", "red");
     } else {
       this.props.searchUsers(this.state.search);
       this.setState({ search: "" });
@@ -42,20 +42,18 @@ export default class SearchForm extends Component {
               <label htmlFor="search">Search Users...</label>
             </div>
           </div>
-
-          <button className="btn" type="submit">Search</button>
-          {this.props.showClearBtn && (
-          
-          <button
-            className="btn waves-effect waves-light"
-            onClick={this.props.clearUsers}
-          >
-            Clear
+          <button className="btn" type="submit">
+            Search
           </button>
-          
-        )}
+          {this.props.showClearBtn && (
+            <button
+              className="btn waves-effect waves-light"
+              onClick={this.props.clearUsers}
+            >
+              Clear
+            </button>
+          )}
         </form>
-        
       </div>
     );
   }

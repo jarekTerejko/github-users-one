@@ -1,4 +1,6 @@
 import React from "react";
+import {Link} from 'react-router-dom'
+
 
 const User = props => {
   const { login, avatar_url, html_url } = props.user;
@@ -10,15 +12,13 @@ const User = props => {
             <img src={avatar_url} alt="User" />
             <span className="card-title">{login}</span>
           </div>
-          <div className="card-content">
+          {/* <div className="card-content">
             <p>
-              I am a very simple card. I am good at containing small bits of
-              information. I am convenient because I require little markup to
-              use effectively.
+              I am a very simple card.
             </p>
-          </div>
+          </div> */}
           <div className="card-action">
-            <a href={html_url}>This is a link</a>
+            <Link to={`/user/${login}`}>This is a link</Link>
           </div>
         </div>
       </div>
