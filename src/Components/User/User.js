@@ -18,7 +18,7 @@ const User = props => {
             </p>
           </div> */}
           <div className="card-action">
-            <Link to={`/user/${login}`}>This is a link</Link>
+            <Link to={`/user/${login}`}>More</Link>
           </div>
         </div>
       </div>
