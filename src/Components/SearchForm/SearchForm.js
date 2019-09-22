@@ -29,7 +29,8 @@ export default class SearchForm extends Component {
   render() {
     return (
       <div className="row" style={{ marginTop: "30px" }}>
-        <form className="col s12" onSubmit={this.handleSubmit}>
+      <div className="col s12">
+        <form onSubmit={this.handleSubmit}>
           <div className="row">
             <div className="input-field col s12">
               <input
@@ -54,6 +55,7 @@ export default class SearchForm extends Component {
             </button>
           )}
         </form>
+        </div>
       </div>
     );
   }

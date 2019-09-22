@@ -1,11 +1,11 @@
 .badges-container {
     display: flex;
     flex-wrap: wrap;
-    padding: 5px;
+    padding: 5px 0;
 }
 
 .my-badge {
     margin: 3px;
-    padding: 1px 7px;
+    padding: 1px 7px 3px;
     border-radius: 2px;
 }

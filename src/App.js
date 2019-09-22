@@ -2,9 +2,8 @@ import React, { Component, Fragment } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
 import Users from "./Components/Users/Users";
-import UserDetails from './Components/UserDetails/UserDetails'
-import About from "./Pages/About/About"
-// import Loader from "./Components/Loader/Loader";
+import UserDetails from "./Components/UserDetails/UserDetails";
+import About from "./Pages/About/About";
 import SearchForm from "./Components/SearchForm/SearchForm";
 import Alert from "./Components/Alert/Alert";
 
@@ -12,6 +11,7 @@ export default class App extends Component {
   state = {
     users: [],
     user: {},
+    repos: [],
     loading: false,
     alert: null
   };
@@ -27,7 +27,7 @@ export default class App extends Component {
 
       this.setState({ loading: false, users: data });
 
-      this.showAlert("Users fetch successfully", "green");
+      this.showAlert("Users fetched successfully", "green");
     } catch (error) {
       console.log(error);
       this.showAlert("Failed to fetch", "red");
@@ -59,16 +59,33 @@ export default class App extends Component {
 
       this.setState({ loading: false, user: data });
 
-      this.showAlert("User fetch successfully", "green");
+      this.showAlert("User fetched successfully", "green");
     } catch (error) {
       console.log(error);
       this.showAlert("Failed to fetch", "red");
       this.setState({ loading: false });
     }
-  }
+  };
 
   clearUsers = () => {
     this.setState({ users: [] });
+  };
+
+  getUserRepos = async login => {
+    try {
+      this.setState({ loading: true });
+      const response = await fetch(
+        `https://api.github.com/users/${login}/repos?per_page=10&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      );
+      const data = await response.json();
+      console.log(data);
+
+      this.setState({ loading: false, repos: data });
+    } catch (error) {
+      console.log(error);
+      this.showAlert("Failed to fetch", "red");
+      this.setState({ loading: false });
+    }
   };
 
   showAlert = (msg, type) => {
@@ -84,15 +101,6 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    // this.setState({ loading: true });
-
-    // const response = await fetch("https://api.github.com/users");
-    // const data = await response.json();
-    // console.log(data);
-
-    // this.setState({ loading: false, users: data });
-
-    // console.log(process.env.REACT_APP_GITHUB_CLIENT_ID)
     this.getUsers();
   }
 
@@ -101,7 +109,6 @@ export default class App extends Component {
       <BrowserRouter>
         <Fragment>
           <Navbar />
-          {/* <Loader /> */}
           <div className="container">
             <Alert alert={this.state.alert} removeAlert={this.removeAlert} />
             <Switch>
@@ -125,9 +132,20 @@ export default class App extends Component {
                 )}
               />
               <Route exact path="/about" component={About} />
-              <Route exact path="/user/:login" render={props=>(
-                <UserDetails {...props } getUser={this.getUser} user={this.state.user} loading={this.state.loading} />
-              )} />
+              <Route
+                exact
+                path="/user/:login"
+                render={props => (
+                  <UserDetails
+                    {...props}
+                    getUser={this.getUser}
+                    getUserRepos={this.getUserRepos}
+                    user={this.state.user}
+                    repos={this.state.repos}
+                    loading={this.state.loading}
+                  />
+                )}
+              />
             </Switch>
           </div>
         </Fragment>
