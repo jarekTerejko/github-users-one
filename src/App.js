@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { useState,Fragment, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
 import Users from "./Components/Users/Users";
@@ -7,110 +7,115 @@ import About from "./Pages/About/About";
 import SearchForm from "./Components/SearchForm/SearchForm";
 import Alert from "./Components/Alert/Alert";
 
-export default class App extends Component {
-  state = {
-    users: [],
-    user: {},
-    repos: [],
-    loading: false,
-    alert: null
-  };
+const App = () => {
 
-  getUsers = async () => {
+  const [users, setUsers] = useState([])
+  const [user, setUser] = useState({})
+  const [repos, setRepos] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [alert, setAlert] = useState(null)
+
+  const getUsers = async () => {
     try {
-      this.setState({ loading: true });
+      setLoading(true)
       const response = await fetch(
         `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
       );
       const data = await response.json();
       console.log(data);
 
-      this.setState({ loading: false, users: data });
+      setUsers(data)
+      setLoading(false)
 
-      this.showAlert("Users fetched successfully", "green");
+      showAlert("Users fetched successfully", "green");
     } catch (error) {
       console.log(error);
-      this.showAlert("Failed to fetch", "red");
-      this.setState({ loading: false });
+      showAlert("Failed to fetch", "red");
+      setLoading(false)
     }
   };
 
-  searchUsers = async searchText => {
+  const searchUsers = async searchText => {
     console.log(searchText);
 
-    this.setState({ loading: true });
+    setLoading(true)
     const response = await fetch(
       `https://api.github.com/search/users?q=${searchText}&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
     const data = await response.json();
     console.log(data);
 
-    this.setState({ loading: false, users: data.items });
+    setUsers(data.items)
+    setLoading(false)
   };
 
-  getUser = async login => {
+  const getUser = async login => {
     try {
-      this.setState({ loading: true });
+      setLoading(true)
       const response = await fetch(
         `https://api.github.com/users/${login}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
       );
       const data = await response.json();
       console.log(data);
 
-      this.setState({ loading: false, user: data });
+        setUser(data)
+        setLoading(false)
 
-      this.showAlert("User fetched successfully", "green");
+      showAlert("User fetched successfully", "green");
     } catch (error) {
       console.log(error);
-      this.showAlert("Failed to fetch", "red");
-      this.setState({ loading: false });
+      showAlert("Failed to fetch", "red");
+      setLoading(false)
     }
   };
 
-  clearUsers = () => {
-    this.setState({ users: [] });
+  const clearUsers = () => {
+    setUsers([])
   };
 
-  getUserRepos = async login => {
+  const getUserRepos = async login => {
     try {
-      this.setState({ loading: true });
+      setLoading(true)
       const response = await fetch(
         `https://api.github.com/users/${login}/repos?per_page=10&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
       );
       const data = await response.json();
       console.log(data);
 
-      this.setState({ loading: false, repos: data });
+      setRepos(data)
+      setLoading(false)
     } catch (error) {
       console.log(error);
-      this.showAlert("Failed to fetch", "red");
-      this.setState({ loading: false });
-    }
+      showAlert("Failed to fetch", "red");
+    setLoading(false)
+}
   };
 
-  showAlert = (msg, type) => {
-    this.setState({ alert: { msg: msg, type: type } });
+  const showAlert = (msg, type) => {
+    setAlert( { msg: msg, type: type})
 
     setTimeout(() => {
-      this.removeAlert();
+      removeAlert();
     }, 5000);
   };
 
-  removeAlert = () => {
-    this.setState({ alert: null });
+  const removeAlert = () => {
+    setAlert( null );
   };
 
-  componentDidMount() {
-    this.getUsers();
-  }
 
-  render() {
+
+  useEffect(() => {
+    getUsers()
+  }, [])
+
+
     return (
       <BrowserRouter>
         <Fragment>
           <Navbar />
           <div className="container">
-            <Alert alert={this.state.alert} removeAlert={this.removeAlert} />
+            <Alert alert={alert} removeAlert={removeAlert} />
             <Switch>
               <Route
                 exact
@@ -118,15 +123,15 @@ export default class App extends Component {
                 render={props => (
                   <Fragment>
                     <SearchForm
-                      searchUsers={this.searchUsers}
-                      clearUsers={this.clearUsers}
-                      showAlert={this.showAlert}
-                      removeAlert={this.removeAlert}
-                      showClearBtn={this.state.users.length ? true : false}
+                      searchUsers={searchUsers}
+                      clearUsers={clearUsers}
+                      showAlert={showAlert}
+                      removeAlert={removeAlert}
+                      showClearBtn={users.length ? true : false}
                     />
                     <Users
-                      loading={this.state.loading}
-                      users={this.state.users}
+                      loading={loading}
+                      users={users}
                     />
                   </Fragment>
                 )}
@@ -138,11 +143,11 @@ export default class App extends Component {
                 render={props => (
                   <UserDetails
                     {...props}
-                    getUser={this.getUser}
-                    getUserRepos={this.getUserRepos}
-                    user={this.state.user}
-                    repos={this.state.repos}
-                    loading={this.state.loading}
+                    getUser={getUser}
+                    getUserRepos={getUserRepos}
+                    user={user}
+                    repos={repos}
+                    loading={loading}
                   />
                 )}
               />
@@ -152,4 +157,7 @@ export default class App extends Component {
       </BrowserRouter>
     );
   }
-}
+
+
+  export default App
+
