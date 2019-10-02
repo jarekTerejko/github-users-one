@@ -1,18 +1,15 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useContext } from "react";
 import Loader from "../Loader/Loader";
+import { GithubContext } from "../../contexts/GithubContext";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 import "./UserDetails.css";
 import Repos from "../Repos/Repos";
 
-const UserDetails = ({
-  user,
-  loading,
-  getUser,
-  getUserRepos,
-  repos,
-  match
-}) => {
+const UserDetails = ({ match }) => {
+  const { getUser, getUserRepos, loading, repos, user } = useContext(
+    GithubContext
+  );
+
   useEffect(() => {
     getUser(match.params.login);
     getUserRepos(match.params.login);
@@ -142,14 +139,6 @@ const UserDetails = ({
       </Fragment>
     );
   }
-};
-
-UserDetails.propTypes = {
-  loading: PropTypes.bool,
-  user: PropTypes.object.isRequired,
-  getUser: PropTypes.func.isRequired,
-  getUserRepos: PropTypes.func.isRequired,
-  repos: PropTypes.array.isRequired
 };
 
 export default UserDetails;

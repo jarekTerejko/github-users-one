@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GithubContext } from "../../contexts/GithubContext";
 import "./Alert.css";
 
-const Alert = ({ alert, removeAlert }) => {
+const Alert = () => {
+  const { alert, removeAlert } = useContext(GithubContext);
+
   return (
     alert !== null && (
       <div className="row">

@@ -1,22 +1,14 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useContext } from "react";
+import { GithubContext } from "../../contexts/GithubContext";
 
-const SearchForm = ({ showAlert, searchUsers, showClearBtn, clearUsers }) => {
-  const [search, setSearch] = useState("");
-
-  const handleChange = e => {
-    setSearch(e.target.value);
-  };
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (search === "") {
-      showAlert("Please enter text to search", "red");
-    } else {
-      searchUsers(search);
-      setSearch("");
-    }
-  };
+const SearchForm = () => {
+  const {
+    showClearBtn,
+    clearUsers,
+    search,
+    setSearch,
+    handleSubmit
+  } = useContext(GithubContext);
 
   return (
     <div className="row" style={{ marginTop: "30px" }}>
@@ -29,12 +21,13 @@ const SearchForm = ({ showAlert, searchUsers, showClearBtn, clearUsers }) => {
                 id="search"
                 type="text"
                 className="validate"
-                onChange={handleChange}
+                onChange={e => setSearch(e.target.value)}
+                value={search}
               />
               <label htmlFor="search">Search Users...</label>
             </div>
           </div>
-          <button className="btn" type="submit">
+          <button className="waves-effect waves-light btn" type="submit">
             Search
           </button>
           {showClearBtn && (
@@ -49,13 +42,6 @@ const SearchForm = ({ showAlert, searchUsers, showClearBtn, clearUsers }) => {
       </div>
     </div>
   );
-};
-
-SearchForm.propTypes = {
-  searchUsers: PropTypes.func.isRequired,
-  clearUsers: PropTypes.func.isRequired,
-  showClearBtn: PropTypes.bool.isRequired,
-  showAlert: PropTypes.func.isRequired
 };
 
 export default SearchForm;
