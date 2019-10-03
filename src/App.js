@@ -7,6 +7,8 @@ import UserDetails from "./Components/UserDetails/UserDetails";
 import About from "./Pages/About/About";
 import SearchForm from "./Components/SearchForm/SearchForm";
 import Alert from "./Components/Alert/Alert";
+import Pagination from "./Components/Pagination/Pagination";
+
 
 const App = () => {
   return (
@@ -24,6 +26,7 @@ const App = () => {
                   <Fragment>
                     <SearchForm />
                     <Users />
+                    <Pagination />
                   </Fragment>
                 )}
               />

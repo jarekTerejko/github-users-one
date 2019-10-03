@@ -6,7 +6,7 @@ import Loader from "../Loader/Loader";
 import "./Users.css";
 
 const Users = () => {
-  const { users, loading } = useContext(GithubContext);
+  const { loading, currentUsers } = useContext(GithubContext);
 
   if (loading) {
     return <Loader />;
@@ -15,7 +15,7 @@ const Users = () => {
       <div className="row">
         <div className="col s12">
           <div className="users-container">
-            {users.map(user => {
+            {currentUsers.map(user => {
               return <User key={user.id} user={user} />;
             })}
           </div>

@@ -9,6 +9,16 @@ const GithubContextProvider = props => {
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1)
+  const [usersPerPage, setUsersPerPage] = useState(8)
+
+  const indexOfLastUser = currentPage * usersPerPage
+  const indexOfFirstUser = indexOfLastUser - usersPerPage
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser)
+
+  const doPagination = (pageNumber) => {
+    setCurrentPage(pageNumber)
+  }
 
   const getUsers = async () => {
     try {
@@ -53,7 +63,7 @@ const GithubContextProvider = props => {
   const handleSubmit = e => {
     e.preventDefault();
     if (search === "") {
-      showAlert("please enter a valid text to search", "red");
+      showAlert("Please enter a valid text to search", "red");
     } else {
       searchUsers(search);
     }
@@ -144,7 +154,11 @@ const GithubContextProvider = props => {
         getUserRepos,
         search,
         setSearch,
-        handleSubmit
+        handleSubmit,
+        currentUsers,
+        usersPerPage,
+        doPagination
+
       }}
     >
       {props.children}
